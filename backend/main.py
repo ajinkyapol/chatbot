@@ -4,8 +4,9 @@ from dotenv import load_dotenv
 from backend.schemas.models import ChatRequest, ChatResponse
 from backend.api.v1.chat import router as chat_router
 from backend.api.v1.health import router as health_router
+import os
 
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 def create_app():
 

@@ -1,4 +1,16 @@
-openai == 2.33.0
 fastapi == 0.136.1
 uvicorn == 0.46.0
 python-dotenv == 1.2.2
+langchain
+langchain-openai
+langchain-anthropic
+
+openai
+transformers
+huggingface-hub
+
+python-dotenv
+
+numpy
+pandas
+scikit-learn

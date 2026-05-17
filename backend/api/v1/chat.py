@@ -1,11 +1,13 @@
 from sys import prefix
 from backend.schemas.models import ChatRequest, ChatResponse
+from backend.services.langgraph.graph import graph
+from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, BaseMessage
 from fastapi import APIRouter 
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '..', '.env'))
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 router = APIRouter(prefix="/api/v1", tags=["chat"])
 
@@ -13,12 +15,6 @@ router = APIRouter(prefix="/api/v1", tags=["chat"])
 def chat(request: ChatRequest):
 
     msg = request.message
-
-    response = openai_client.chat.completions.create(
-        model = "gpt-4o-mini",
-        messages = [
-            {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": msg}
-        ]
-    )
-    return {"response": response.choices[0].message.content}
+    HumanMessage(content=msg)
+    response = graph.invoke({"messages": [HumanMessage(content=msg)]})
+    return {"response": response['messages'][-1].content}
