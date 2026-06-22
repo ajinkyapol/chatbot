@@ -1,10 +1,10 @@
 import './Sidebar.css'
 
-export const Sidebar = () => {
+export const Sidebar = ({ onNewChat }) => {
   return (
     <aside className="sidebar">
       <div className="sidebar-content">
-        <button className="new-chat-button">
+        <button className="new-chat-button" onClick={onNewChat}>
           + New Chat
         </button>
         <nav className="chat-list">

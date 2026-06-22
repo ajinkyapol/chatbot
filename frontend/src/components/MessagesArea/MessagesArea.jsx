@@ -1,34 +1,49 @@
+import { useEffect, useRef } from 'react'
 import './MessagesArea.css'
 
-export const MessagesArea = () => {
+export const MessagesArea = ({ messages, isLoading }) => {
+  const messagesEndRef = useRef(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages, isLoading])
+
   return (
     <main className="messages-area">
       <div className="messages-content">
         <div className="message-container">
-          <div className="message message-user">
-            <div className="message-avatar user-avatar">U</div>
-            <div className="message-bubble">
-              <p className="message-text">Hello! How can I help you today?</p>
+          {messages.length === 0 ? (
+            <div className="empty-state">
+              <p className="empty-state-text">Start a conversation by typing a message below</p>
             </div>
-          </div>
-          <div className="message message-assistant">
-            <div className="message-avatar assistant-avatar">AI</div>
-            <div className="message-bubble">
-              <p className="message-text">Hi! I'm your AI assistant. I can help you with various tasks. What would you like to know?</p>
+          ) : (
+            messages.map((msg, index) => (
+              <div 
+                key={index} 
+                className={`message ${msg.role === 'user' ? 'message-user' : 'message-assistant'}`}
+              >
+                <div className={`message-avatar ${msg.role === 'user' ? 'user-avatar' : 'assistant-avatar'}`}>
+                  {msg.role === 'user' ? 'U' : 'AI'}
+                </div>
+                <div className="message-bubble">
+                  <p className="message-text">{msg.content}</p>
+                </div>
+              </div>
+            ))
+          )}
+          {isLoading && (
+            <div className="message message-assistant">
+              <div className="message-avatar assistant-avatar">AI</div>
+              <div className="message-bubble">
+                <p className="message-text typing-indicator">...</p>
+              </div>
             </div>
-          </div>
-          <div className="message message-user">
-            <div className="message-avatar user-avatar">U</div>
-            <div className="message-bubble">
-              <p className="message-text">Can you explain what this chatbot does?</p>
-            </div>
-          </div>
-          <div className="message message-assistant">
-            <div className="message-avatar assistant-avatar">AI</div>
-            <div className="message-bubble">
-              <p className="message-text">This is a chatbot interface designed to help you interact with AI. You can ask questions, get assistance, and have conversations. The sidebar shows your chat history, and you can start new conversations anytime.</p>
-            </div>
-          </div>
+          )}
+          <div ref={messagesEndRef} />
         </div>
       </div>
     </main>

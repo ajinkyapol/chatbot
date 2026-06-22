@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import './InputBox.css'
 
-export const InputBox = () => {
+export const InputBox = ({ onSendMessage, isLoading }) => {
   const [message, setMessage] = useState('')
   const textareaRef = useRef(null)
 
@@ -13,8 +13,8 @@ export const InputBox = () => {
   }, [message])
 
   const handleSend = () => {
-    if (message.trim()) {
-      console.log('Sending message:', message)
+    if (message.trim() && !isLoading) {
+      onSendMessage(message)
       setMessage('')
     }
   }
@@ -39,19 +39,20 @@ export const InputBox = () => {
           <textarea
             ref={textareaRef}
             className="message-input"
-            placeholder="Type your message..."
+            placeholder={isLoading ? "Sending..." : "Type your message..."}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            onKeyPress={handleKeyPress}
+            onKeyUp={handleKeyPress}
             rows={1}
+            disabled={isLoading}
           />
           <button 
             className={`input-action-button send-button ${message.trim() ? 'active' : ''}`}
             onClick={handleSend}
-            disabled={!message.trim()}
+            disabled={!message.trim() || isLoading}
             aria-label="Send message"
           >
-            ➤
+            {isLoading ? '...' : '➤'}
           </button>
         </div>
       </div>
