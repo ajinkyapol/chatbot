@@ -4,6 +4,7 @@ python-dotenv == 1.2.2
 langchain
 langchain-openai
 langchain-anthropic
+aiosqlite
 
 openai
 transformers
