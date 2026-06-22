@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import './MessagesArea.css'
 
-export const MessagesArea = ({ messages, isLoading }) => {
+export const MessagesArea = ({ messages, isLoading, isStreaming, streamingMessage }) => {
   const messagesEndRef = useRef(null)
 
   const scrollToBottom = () => {
@@ -10,7 +10,7 @@ export const MessagesArea = ({ messages, isLoading }) => {
 
   useEffect(() => {
     scrollToBottom()
-  }, [messages, isLoading])
+  }, [messages, isLoading, isStreaming, streamingMessage])
 
   return (
     <main className="messages-area">
@@ -35,7 +35,17 @@ export const MessagesArea = ({ messages, isLoading }) => {
               </div>
             ))
           )}
-          {isLoading && (
+          {isStreaming && (
+            <div className="message message-assistant">
+              <div className="message-avatar assistant-avatar">AI</div>
+              <div className="message-bubble">
+                <p className="message-text">
+                  {streamingMessage}<span className="cursor">|</span>
+                </p>
+              </div>
+            </div>
+          )}
+          {isLoading && !isStreaming && (
             <div className="message message-assistant">
               <div className="message-avatar assistant-avatar">AI</div>
               <div className="message-bubble">
