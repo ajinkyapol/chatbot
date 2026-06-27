@@ -78,6 +78,25 @@
   outline-offset: 2px;
 }
 
+.stop-button {
+  background-color: var(--user-avatar-bg);
+  color: white;
+  font-size: 14px;
+}
+
+.stop-button:hover {
+  transform: scale(1.05);
+}
+
+.stop-button:active {
+  transform: scale(0.95);
+}
+
+.stop-button:focus {
+  outline: 2px solid var(--user-avatar-bg);
+  outline-offset: 2px;
+}
+
 .message-input {
   flex: 1;
   border: none;

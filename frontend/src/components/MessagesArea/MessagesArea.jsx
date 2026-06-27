@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { MessageContent } from '../MessageContent'
 import './MessagesArea.css'
 
 export const MessagesArea = ({ messages, isLoading, isStreaming, streamingMessage }) => {
@@ -30,7 +31,11 @@ export const MessagesArea = ({ messages, isLoading, isStreaming, streamingMessag
                   {msg.role === 'user' ? 'U' : 'AI'}
                 </div>
                 <div className="message-bubble">
-                  <p className="message-text">{msg.content}</p>
+                  {msg.role === 'user' ? (
+                    <p className="message-text">{msg.content}</p>
+                  ) : (
+                    <MessageContent content={msg.content} />
+                  )}
                 </div>
               </div>
             ))
@@ -39,9 +44,8 @@ export const MessagesArea = ({ messages, isLoading, isStreaming, streamingMessag
             <div className="message message-assistant">
               <div className="message-avatar assistant-avatar">AI</div>
               <div className="message-bubble">
-                <p className="message-text">
-                  {streamingMessage}<span className="cursor">|</span>
-                </p>
+                <MessageContent content={streamingMessage} />
+                <span className="cursor">|</span>
               </div>
             </div>
           )}

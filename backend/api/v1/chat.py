@@ -1,7 +1,7 @@
 import uuid
 import json
-from backend.schemas.models import ChatRequest, ChatResponse
-from langchain_core.messages import HumanMessage
+from backend.schemas.models import ChatRequest, ChatResponse, HistoryResponse
+from langchain_core.messages import HumanMessage, AIMessage
 from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
 from dotenv import load_dotenv
@@ -74,3 +74,27 @@ async def chat_stream(request: ChatRequest, http_request: Request):
             }) + "\n"
     
     return StreamingResponse(generate(), media_type="text/plain")
+
+@router.get("/chat/{thread_id}/history", response_model=HistoryResponse)
+async def chat_history(thread_id: str, http_request: Request):
+    """Return the persisted message history for a thread so the UI can resume."""
+    graph = http_request.app.state.graph
+    config = {"configurable": {"thread_id": thread_id}}
+
+    state = await graph.aget_state(config)
+    stored = state.values.get("messages", []) if state and state.values else []
+
+    messages = []
+    for msg in stored:
+        if isinstance(msg, HumanMessage):
+            role = "user"
+        elif isinstance(msg, AIMessage):
+            role = "assistant"
+        else:
+            continue
+        # Skip empty assistant chunks (e.g. tool/stream artifacts)
+        if not msg.content:
+            continue
+        messages.append({"role": role, "content": msg.content})
+
+    return {"thread_id": thread_id, "messages": messages}
