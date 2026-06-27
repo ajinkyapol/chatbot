@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import './InputBox.css'
 
-export const InputBox = ({ onSendMessage, isLoading }) => {
+export const InputBox = ({ onSendMessage, isLoading, isStreaming, onStop }) => {
   const [message, setMessage] = useState('')
   const textareaRef = useRef(null)
 
@@ -46,14 +46,24 @@ export const InputBox = ({ onSendMessage, isLoading }) => {
             rows={1}
             disabled={isLoading}
           />
-          <button 
-            className={`input-action-button send-button ${message.trim() ? 'active' : ''}`}
-            onClick={handleSend}
-            disabled={!message.trim() || isLoading}
-            aria-label="Send message"
-          >
-            {isLoading ? '...' : '➤'}
-          </button>
+          {isStreaming ? (
+            <button
+              className="input-action-button stop-button"
+              onClick={onStop}
+              aria-label="Stop generating"
+            >
+              ◼
+            </button>
+          ) : (
+            <button
+              className={`input-action-button send-button ${message.trim() ? 'active' : ''}`}
+              onClick={handleSend}
+              disabled={!message.trim() || isLoading}
+              aria-label="Send message"
+            >
+              {isLoading ? '...' : '➤'}
+            </button>
+          )}
         </div>
       </div>
     </footer>

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 class ChatRequest(BaseModel):
     message: str
@@ -8,3 +8,11 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     response: str
     thread_id: str
+
+class HistoryMessage(BaseModel):
+    role: str
+    content: str
+
+class HistoryResponse(BaseModel):
+    thread_id: str
+    messages: List[HistoryMessage]

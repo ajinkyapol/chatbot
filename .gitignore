@@ -31,3 +31,9 @@ Thumbs.db
 # Environment variables
 .env
 .env.local
+
+# LangGraph checkpointer database
+checkpointer.db
+checkpointer.db-shm
+checkpointer.db-wal
+checkpointer.db-x-*
